@@ -62,7 +62,7 @@ function config($key=false,$val=NULL,$set=false)
 	return $val;
 }
 /**
- * $silent suppresses output in DEBUG mode. In producion, always silent.
+ * $silent suppresses output in DEBUG mode. In production, always silent.
  */
 function log($msg,$silent=false)
 {

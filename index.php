@@ -34,6 +34,9 @@ if(FROM_CLI){
 }else{
   if(isset($_SERVER['PATH_INFO']))
     $params=trim($_SERVER['PATH_INFO'],"/\\");
+  elseif(isset($_SERVER['ORIG_PATH_INFO'])){
+    $params=trim($_SERVER['ORIG_PATH_INFO'],"/\\");
+  }
   elseif(defined('APP_BASE_URL')){
 /**
  * APP_BASE_URL must be defined in somewhere (preferably constants.php)

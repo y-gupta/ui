@@ -2,7 +2,7 @@
 \ui\load_lib('cache');
 \ui\benchmark('Start TEST');
 if(\ui\cache\start2(false,10)){
-  echo 'hello!';
+  echo 'hello!<br>';
   for($i=0;$i<exp(3);$i++){
     $r1=rand();
     $r2=rand();

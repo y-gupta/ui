@@ -22,14 +22,14 @@ function &session($key=false,$val=null){
 /**
  * Required for parsing signed_request
  */
-function base64_url_encode($data) { 
-  return rtrim(strtr(base64_encode($data), '+/', '-_'), '='); 
+function base64_url_encode($data) {
+  return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
 }
 /**
  * Required for parsing signed_request
- */ 
-function base64_url_decode($data) { 
-  return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT)); 
+ */
+function base64_url_decode($data) {
+  return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
 }
 
 function sr($secret=false,$sr=false) {
@@ -42,19 +42,19 @@ function sr($secret=false,$sr=false) {
     if(!$secret)
       $secret=session('secret');
 		list($encoded_sig, $payload) = explode('.', $sr, 2);
-		$sig = base64_url_decode($encoded_sig);
 		$data = json_decode(base64_url_decode($payload), true);
 
-		if(strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
-				error_log('Unknown algorithm. Expected HMAC-SHA256');
-				return null;
-		}
+		// $sig = base64_url_decode($encoded_sig);
+		// if(strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
+		// 		error_log('Unknown algorithm. Expected HMAC-SHA256');
+		// 		return null;
+		// }
 
-		$expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
-		if($sig !== $expected_sig) {
-				error_log('Bad Signed JSON signature!');
-				return null;
-		}
+		// $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+		// if($sig !== $expected_sig) {
+		// 		error_log('Bad Signed JSON signature!');
+		// 		return null;
+		// }
     session('sr',$data);
     if(isset($data['oauth_token'])){
       session('access_token',$data['oauth_token']);
@@ -84,7 +84,7 @@ function post($path,$params=array(),$decode=true,$set_token=true)
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output
 	$result = curl_exec($ch);
 	curl_close ($ch);
 	return $decode?json_decode($result,1):$result;
@@ -103,15 +103,15 @@ function get($path,$params=array(),$decode=true,$set_token=true)
   }
 	$ch = curl_init();
 	$url='https://graph.facebook.com'.$path.'?'.http_build_query($params);
-	
+
     curl_setopt($ch, CURLOPT_URL,$url);
   if(php_uname('n')=='INFIONMOVE'){
     curl_setopt($ch, CURLOPT_PROXY,'proxy62.iitd.ernet.in:3128');
   }
-  
+
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output
 	$result = curl_exec($ch);
 	curl_close($ch);
 	return $decode?json_decode($result,1):$result;
@@ -133,7 +133,7 @@ function login_url($redirect_url=false,$permissions=array(),$session_key='state'
 /**
  * Get's the access_token from the code returned by facebook after an oauth dialog
  * If no $redirect_url is supplied, the url is tried to be extracted from
- * The current url on which the user is. Note that the query string is stripped from the url. 
+ * The current url on which the user is. Note that the query string is stripped from the url.
  * Recommended if you are retrieving the token from the same url to which facebook redirects.
  * @param string $redirect_url This absolute url must be same as that you used while redirecting to the oauth dialog.
  * @return array array({token},{expiry time, absolute}) if successful, otherwise array(false,0)
@@ -196,7 +196,7 @@ function fql($query,$token=false)
 }
 /**
  * Get an array of pages controlled by the current user
- * Each page is 
+ * Each page is
  * array(
  *   'id'=>{page id},
  *   'access_token'=>{page token},
@@ -251,7 +251,7 @@ function status($target,$msg,$time=0,$token=false,$link='',$link_desc='',$link_i
 		$params['published']=false;
 	}elseif($time-time()<610)//error of 10 minutes is O.K.
 	{
-		$params['published']=true;	
+		$params['published']=true;
 	}else{
 		return array('error'=>array('message'=>'Invalid Schedule Time'));
 	}
@@ -287,7 +287,7 @@ function photo($target,$photo,$msg,$time=0,$token=false)
 		$params['published']=false;
 	}elseif($time-time()<610)//error of 10 minutes is O.K.
 	{
-		$params['published']=true;	
+		$params['published']=true;
 	}else{
 		return array('error'=>array('message'=>'Invalid Schedule Time'));
 	}

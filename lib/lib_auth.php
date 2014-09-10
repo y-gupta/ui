@@ -84,8 +84,8 @@ function logged_in()
     $email=$_COOKIE[IID.'_login_email'];
     $key=$_COOKIE[IID.'_login_key'];
   }else{
-    log_out(); 
-    return $guest; 
+    log_out();
+    return $guest;
   }
   \ui\db\select(\ui\config('auth_table'),array('*'),"WHERE email='".\ui\db\escape($email)."' LIMIT 1");
   $user=\ui\db\assoc();
@@ -110,8 +110,6 @@ function logged_in()
 }
 function log_in($email,$pass,$remember=true)
 {
-  echo $email,$pass;
-  exit();
   $user=user();
   \ui\db\select(\ui\config('auth_table'),array('*'),"WHERE email='".\ui\db\escape($email)."' LIMIT 1");
   $user=\ui\db\assoc();
@@ -128,7 +126,7 @@ function log_in($email,$pass,$remember=true)
 	{
 		if(DEBUG)
       error_log('FAILED LOGIN ATTEMPT FROM '.$_SERVER['REMOTE_ADDR'].' ON '.date('M d,Y h:i:s a P').PHP_EOL);
-		return false;	
+		return false;
 	}
 	if(!session_id())
 		session_start();
@@ -151,7 +149,7 @@ function log_out()
 	setcookie(IID.'_login_key',0,$timestamp-1000,'/');
 	setcookie(IID.'_login_time',0,$timestamp-1000,'/');
 	setcookie(IID.'_login_email',0,$timestamp-1000,'/');
-	if(!session_id())	
+	if(!session_id())
 		session_start();
 	if(isset($_SESSION[IID.'_login_key']))
 		unset($_SESSION[IID.'_login_key']);

@@ -17,21 +17,21 @@ function db(){
     $host=\ui\config('sql_host',NULL);
     if($host===NULL)
       $host=ini_get("mysqli.default_host");
-      
+
     $user=\ui\config('sql_user',NULL);
     if($user===NULL)
       $user=ini_get("mysqli.default_user");
-    
+
     $pass=\ui\config('sql_pass',NULL);
     if($pass===NULL)
       $pass=ini_get("mysqli.default_pw");
-    
+
     $db=\ui\config('sql_db','');
-    
+
     $port=\ui\config('sql_port',NULL);
     if($port===NULL)
       $port=ini_get("mysqli.default_port");
-    
+
     $socket=\ui\config('sql_socket',NULL);
     if($socket===NULL)
       $socket=ini_get("mysqli.default_socket");
@@ -44,6 +44,10 @@ function db(){
   return $ui_db_db;
 }
 function escape($val)
+{
+  return mysqli_real_escape_string(db(),$val);
+}
+function filter($val)
 {
   return mysqli_real_escape_string(db(),$val);
 }

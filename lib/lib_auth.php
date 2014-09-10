@@ -141,6 +141,7 @@ function log_in($email,$pass,$remember=true)
 		setcookie(IID.'_login_email',$_SESSION[IID.'_login_email'],$timestamp+3600*24*30,'/');
 		setcookie(IID.'_login_time',$timestamp,$timestamp+3600*24*30,'/');
 	}
+  user(0,$user);
 	return true;
 }
 function log_out()

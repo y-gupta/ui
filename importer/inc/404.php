@@ -1,1 +1,0 @@
-<div class="alert alert-error">The Resource You Were trying to Access Does not Exist<br>You tried to access: <b><?php echo htmlspecialchars(\ui\get_url()) ?></b></div>

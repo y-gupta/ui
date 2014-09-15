@@ -17,9 +17,9 @@ define('FROM_CLI',!isset($_SERVER['REMOTE_ADDR']));
 if(FROM_CLI)/** NO_TEMPLATE is needed on CLI */
     define('NO_TEMPLATE',true);
 include(dirname(__FILE__).'/core/ui.php');
-/** 
+/**
  * When accessing from CLI, PATH_INFO is not supported. So, take path insformation as the 1st argument to this script
- * @example php /path/to/index.php /help/contact?get_var=value&more_stuff 
+ * @example php /path/to/index.php /help/contact?get_var=value&more_stuff
  */
 if(FROM_CLI){
     if(isset($argv[1])){
@@ -64,7 +64,7 @@ $is_dir=true;
  * PATH_INFO is parsed incrementally from the lowest level, and goes till the next higher level is an invalid controller.
  * When the deepest possible controller is found, the subsequent parameters are filled in the $_PARAM global array
  * To support directories as controllers, index.php of that directory is called when directory is tried to be accessed.
- * For example, when `[base_url]parent_dir/called_dir/the_parameter.php` is called, 
+ * For example, when `[base_url]parent_dir/called_dir/the_parameter.php` is called,
  * `[base_path]app/parent_dir/called_dir/the_parameter.php` is called if it exists with empty $_PARAM, otherwise
  * `[base_path]app/parent_dir/called_dir/index.php` is called if it exists with `the_parameter` in $_PARAM, otherwise
  * `[base_path]app/parent_dir/called_dir.php` is called if it exists with `the_parameter` in $_PARAM, otherwise
@@ -107,9 +107,13 @@ if($is_dir===true)
 
 \ui\global_var('controller',$ui_controller,true);
 $ui_filepath=$_APP_DIR.'app/'.$ui_controller.'.php';
+\ui\global_var('controller_file',$ui_filepath,true);
 include(dirname(__FILE__).'/core/init.php');
 if($i===0&&!file_exists($ui_filepath)){
-  include($_APP_DIR.'/inc/404.php');
+  if(file_exists($_APP_DIR.'/app/404.php'))
+    include($_APP_DIR.'/app/404.php');
+  else
+    echo "Error #404 - Requested url does not point to a valid resource";
   trigger_error('UI: '.$_APP_DIR.'app/index.php is required for handeling a completely non-existant path',E_USER_ERROR);
   exit();
 }

@@ -54,7 +54,7 @@ function config($key=false,$val=NULL,$set=false)
 		include(global_var('app_dir').'inc/config.php');
 	}
 	if($key===false)
-		return $config;	
+		return $config;
 	if($set)
 		$config[$key]=$val;
 	if(isset($config[$key]))
@@ -100,7 +100,7 @@ function benchmark($tag='',$send=false)
 	$output.=sprintf('    |    prev| %+d KB',($now_mem-$last_mem)/1024).PHP_EOL;
 	$output.=sprintf('    | abs now|  %d KB',$now_mem/1024).PHP_EOL;
 	$output.=sprintf('    |abs peak|  %d KB',$now_mem_peak/1024).PHP_EOL;
-	
+
 	$last_time=$now_time;
 	$last_mem=$now_mem;
 }
@@ -109,11 +109,18 @@ function on_exit()
 	execute_hook('content_end');
   benchmark('Everything Done. Will send output to template.php');
 	benchmark(NULL,true);
-  if(defined('TEMPLATE_FILE'))
-    include(global_var('app_dir').'inc/'.TEMPLATE_FILE);
-  else
-  	include(global_var('app_dir').'inc/template.php');
-	if(!isset($_SESSION['new_flash']))$_SESSION['new_flash']=array();
+  $ctrl=global_var('controller');
+  while($ctrl!==false){
+    $ctrl=substr($ctrl,0,strrpos($ctrl,'/'));
+    $template=config('base_path').'app/'.$ctrl.'/_template.php';
+    if(file_exists($template))
+    {
+      global_var('template_file',$template,1);
+      include($template);
+      break;
+    }
+  }
+  if(!isset($_SESSION['new_flash']))$_SESSION['new_flash']=array();
 	$_SESSION['flash']=$_SESSION['new_flash'];
 	unset($_SESSION['new_flash']);
 	execute_hook('exit');

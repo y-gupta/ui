@@ -110,9 +110,9 @@ function truncate($string, $your_desired_width) {
 
   $length = 0;
   $last_part = 0;
-  
+
   $truncated=false;
-  
+
   for (; $last_part < $parts_count; ++$last_part) {
     $length += strlen($parts[$last_part]);
     if ($length > $your_desired_width) {$truncated=true; break; }
@@ -149,10 +149,10 @@ function thumbnail($src,$thumb,$tarx,$tary=0,$x1=0,$y1=0,$x2=-1,$y2=-1){
 
     while($factor>2*$dfactor){
         //imagefilter($post_src,post_FILTER_SMOOTH,$dfactor/$factor);
-        imagecopyresampled($post_src,$post_src, 0, 0, 0, 0,ceil($srcx/$dfactor),ceil($srcy/$dfactor),$srcx,$srcy);        
+        imagecopyresampled($post_src,$post_src, 0, 0, 0, 0,ceil($srcx/$dfactor),ceil($srcy/$dfactor),$srcx,$srcy);
         $srcx=ceil($srcx/$dfactor);
         $srcy=ceil($srcy/$dfactor);
-        $factor=$srcx/$tarx;    
+        $factor=$srcx/$tarx;
     }*/
     $post_tar=imagecreatetruecolor($tarx,$tary);
     imagecopyresampled($post_tar,$post_src, 0, 0, $x1, $y1,$tarx,$tary,$srcx,$srcy);
@@ -173,14 +173,14 @@ function post($url,$params=array(),$timeout=0,$headers=array())
   $ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$url);
 	if(php_uname('n')=='INFIONMOVE'){
-    curl_setopt($ch, CURLOPT_PROXY,'proxy62.iitd.ernet.in:3128');
+    curl_setopt($ch, CURLOPT_PROXY,'proxy22.iitd.ernet.in:3128');
   }
   curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);
  	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-  
+
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output
 	$res = curl_exec($ch);
 	curl_close ($ch);
   if($timeout)
@@ -200,10 +200,10 @@ function get($url,$params=array(),$timeout=0,$headers=array())
 	}$ch=\curl_init();
 	curl_setopt($ch, CURLOPT_URL,$url);
 	if(php_uname('n')=='INFIONMOVE'){
-  //  curl_setopt($ch, CURLOPT_PROXY,'proxy62.iitd.ernet.in:3128');
+    curl_setopt($ch, CURLOPT_PROXY,'proxy22.iitd.ernet.in:3128');
   }
 	curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output
 	$res = curl_exec($ch);
 	curl_close ($ch);
   if($timeout)

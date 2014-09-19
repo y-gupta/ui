@@ -11,4 +11,5 @@ foreach($autoload['plugin'] as $ui_plugin)
 }
 unset($ui_plugin);
 unset($autoload);
-//custom initialization goes here
+
+//TODO: include _include.php in the path to controller

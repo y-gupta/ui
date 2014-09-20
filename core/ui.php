@@ -139,9 +139,9 @@ function &global_var($key=false,$val=NULL,$set=false)
 		$vars[$key]=$val;
 	}
 	if(isset($vars[$key]))
-		return $vars[$key];
-	else
-		return $val;
+  	return $vars[$key];
+	$vars[$key]=$val;
+  return $vars[$key];
 }
 function register_hook($hook,$callback)
 {
@@ -158,8 +158,9 @@ function execute_hook($hook,&$param=array())
 		return;
 	foreach($hooks[$hook] as $callback)
 	{
-		$callback($param);
+		$ret=$callback($param);
 	}
+  return $ret;
 }
 function set_flash($key,$value,$append=true)
 {
@@ -192,4 +193,3 @@ define('IID',substr(md5($_APP_DIR),0,8));//Instance ID, to prevent session varia
 benchmark('Loaded Base UI');
 if(DEBUG)
 	error_reporting(E_ALL);
-benchmark();

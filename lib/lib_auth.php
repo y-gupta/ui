@@ -10,13 +10,13 @@
  */
 namespace ui\auth;
 \ui\load_lib('db');
-function user($field=false,$set_to_this=false)
+function &user($field=false,$set_to_this=false)
 {
 	static $user=false;
 	if($set_to_this!==false)
 	{
 		$user=$set_to_this;
-    return true;
+    return $user;
 	}
 	if($user===false)
 	 	$user=logged_in();
@@ -24,8 +24,8 @@ function user($field=false,$set_to_this=false)
 		return $user;
 	if(isset($user[$field]))
 		return $user[$field];
-	else
-		return false;
+	$user[$field]=false;
+	return $user[$field];
 }
 function make_key($email,$pass,$time)
 {
@@ -57,9 +57,9 @@ function can_access($perms,$block=true)
 		//stop there!
 		if($block)
 		{
-			if(($l&PERM_USER)===PERM_USER){?><div class="alert alert-error"><b>Freeze! This is a Restricted Area</b><br/>You don't have permissions to access this page. Go Somewhere else.</div><?php
-			}elseif(($l&PERM_DEMO)===PERM_DEMO){?><div class="alert alert-error"><b>Freeze! This is a Restricted Area</b><br/>This page cannot be accessed in demo/read-only mode.</div><?php
-			}else{?><div class="alert alert-error"><b>Did you forget to do something?</b><br/><a href='login?redir=<?php echo urlencode($_SERVER['REQUEST_URI']) ?>'>Please Login</a> to Continue</div><?php
+			if(($l&PERM_USER)===PERM_USER){?><div class="alert alert-danger"><b>Oh no!</b><br/>You don't have permissions to access this page.</div><?php
+			}elseif(($l&PERM_DEMO)===PERM_DEMO){?><div class="alert alert-danger"><b>This is a Restricted Area</b><br/>This page cannot be accessed in demo/read-only mode.</div><?php
+			}else{?><div class="alert alert-error"><a href='login?redir=<?php echo urlencode($_SERVER['REQUEST_URI']) ?>'>Please Login</a> to Continue</div><?php
 			}
 			exit();
 		}
@@ -110,7 +110,7 @@ function logged_in()
 }
 function log_in($email,$pass,$remember=true)
 {
-  $user=user();
+  $user=&user();
   \ui\db\select(\ui\config('auth_table'),array('*'),"WHERE email='".\ui\db\escape($email)."' LIMIT 1");
   $user=\ui\db\assoc();
   if(!$user){
@@ -124,6 +124,7 @@ function log_in($email,$pass,$remember=true)
     return false;
 	if(!check($pass,$user['password']))
 	{
+    $user=array();
 		if(DEBUG)
       error_log('FAILED LOGIN ATTEMPT FROM '.$_SERVER['REMOTE_ADDR'].' ON '.date('M d,Y h:i:s a P').PHP_EOL);
 		return false;
@@ -141,7 +142,6 @@ function log_in($email,$pass,$remember=true)
 		setcookie(IID.'_login_email',$_SESSION[IID.'_login_email'],$timestamp+3600*24*30,'/');
 		setcookie(IID.'_login_time',$timestamp,$timestamp+3600*24*30,'/');
 	}
-  user(0,$user);
 	return true;
 }
 function log_out()
@@ -158,5 +158,5 @@ function log_out()
 		unset($_SESSION[IID.'_login_time']);
 	if(isset($_SESSION[IID.'_login_email']))
 		unset($_SESSION[IID.'_login_email']);
-	user(false,\ui\config('auth_guest'));
+	user(false,array());
 }

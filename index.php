@@ -117,6 +117,7 @@ if($i===0&&!file_exists($ui_filepath)){
   trigger_error('UI: '.$_APP_DIR.'app/index.php is required for handeling a completely non-existant path',E_USER_ERROR);
   exit();
 }
+
 /**
  * Clean up all variables no longer required for minimum footprint
  */

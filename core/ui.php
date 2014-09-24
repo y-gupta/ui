@@ -193,3 +193,5 @@ define('IID',substr(md5($_APP_DIR),0,8));//Instance ID, to prevent session varia
 benchmark('Loaded Base UI');
 if(DEBUG)
 	error_reporting(E_ALL);
+else
+  error_reporting(0);

@@ -33,6 +33,7 @@ if(FROM_CLI){
     }else $params='';
 }else if(UI_URL_REWRITE){
   if(substr($_SERVER['REQUEST_URI'],0,strlen($_SERVER['SCRIPT_NAME']))==$_SERVER['SCRIPT_NAME']){
+    http_response_code(403);
     if(file_exists($_APP_DIR.'/app/403.php'))
       include($_APP_DIR.'/app/403.php');
     else
@@ -52,6 +53,7 @@ if(FROM_CLI){
 
   //TODO: check if file exists in public/
   if($params&&file_exists('public/'.$params)){
+    http_response_code(301);
     header('Location: '.rtrim(dirname($_SERVER['SCRIPT_NAME']),'/').'/public/'.$params);
     exit;
   }
@@ -114,6 +116,7 @@ $ui_filepath=$_APP_DIR.'app/'.$ui_controller.'.php';
 \ui\global_var('controller_file',$ui_filepath,true);
 include(dirname(__FILE__).'/core/init.php');
 if($i===0&&!file_exists($ui_filepath)){
+  http_response_code(404);
   if(file_exists($_APP_DIR.'/app/404.php'))
     include($_APP_DIR.'/app/404.php');
   else

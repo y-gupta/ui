@@ -126,6 +126,15 @@ function get_url($name='path')//returns absolute URL to a controller
 	if($name=='path')$name=global_var('path');
 	return config('base_url').$name;
 }
+function relative_base_url(){
+  $base=dirname($_SERVER['SCRIPT_NAME']);
+  if(UI_URL_REWRITE)
+    $base=substr($base,0,-7);// remove /public
+  else
+    $base.='/index.php/';
+  $base=rtrim($base,'/').'/';//relative URL to base directory
+  return $base;    
+}
 function &global_var($key=false,$val=NULL,$set=false)
 {
 	static $vars=NULL;

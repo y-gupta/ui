@@ -1,7 +1,7 @@
 <?php
 namespace  ui\form;
 /*
-$options can have: 
+$options can have:
 id
 slug
 attr
@@ -13,10 +13,12 @@ function captcha(){
   echo recaptcha_get_html(\ui\config('recaptcha_public_key'));
 }
 function check_captcha(){
+	if($_SERVER["REMOTE_ADDR"]=='::1')
+		return true;
   $resp=recaptcha_check_answer (\ui\config('recaptcha_private_key'),
                                 $_SERVER["REMOTE_ADDR"],
-                                $_POST["recaptcha_challenge_field"],
-                                $_POST["recaptcha_response_field"]);
+                                isset($_POST["recaptcha_challenge_field"])?$_POST["recaptcha_challenge_field"]:'',
+                                isset($_POST["recaptcha_response_field"])?$_POST["recaptcha_response_field"]:'');
   return $resp->is_valid;
 }
 function text($key,$label=false,$value='',$options=array())
@@ -95,5 +97,5 @@ function select($key,$label,$values,$selected=false,$options){
 	if(!isset($options['id']))
 		$options['id']=$options['slug'].'_'.$key;
 	echo '<label for="'.$options['id'].'" class="radio'.(isset($options['inline'])&&$options['inline']?' inline':'').'">';
-	echo '<input class="'.(isset($options['class'])?$options['class']:'').'" type="radio" name="'.$key.'" id="'.$options['id'].'" value="'.$value.'" '.($checked?'checked="checked" ':'').(isset($options['attr'])?$options['attr']:'').' />'.$label.'</label>';  
+	echo '<input class="'.(isset($options['class'])?$options['class']:'').'" type="radio" name="'.$key.'" id="'.$options['id'].'" value="'.$value.'" '.($checked?'checked="checked" ':'').(isset($options['attr'])?$options['attr']:'').' />'.$label.'</label>';
 }

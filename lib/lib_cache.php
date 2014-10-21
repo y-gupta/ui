@@ -57,8 +57,7 @@ function exists($id=FALSE,$timeout=FALSE,$return_data=FALSE)
     @unlink($fname);//Dele
     return FALSE;
   }
-  if($return_data)
-  {
+  if($return_data){
     $data='';
     while(!feof($fs))
       $data.=fread($fs,1024*512);//read in 512 KB blocks
@@ -108,8 +107,7 @@ function start2($id=false,$timeout=false)
 {
   if($id===false)
     $id=make_id();
-  if(isset($_GET['nocache'])&&$_GET['nocache']==\ui\config('nocache_code'))
-  {
+  if(isset($_GET['nocache'])&&$_GET['nocache']==\ui\config('nocache_code')){
     global $ui_cache_ignores,$ui_cache_ids;
     $ui_cache_ids[]=$ui_cache_ignores[]=$id;
     return TRUE;
@@ -118,8 +116,7 @@ function start2($id=false,$timeout=false)
     $timeout=\ui\config('cache_timeout',3600);
   $fname=\ui\config('cache_path').$id.\ui\config('cache_file_suffix');
   $fs=@fopen($fname,'rb',FASLE);
-  if($fs!==FALSE)
-  {
+  if($fs!==FALSE){
     flock($fs,LOCK_SH|LOCK_NB);
     $time=fread($fs,4);
     if(!isset($time[3])){
@@ -164,8 +161,7 @@ function stop($return=FALSE)
   $data=ob_get_clean();
   $fname=\ui\config('cache_path').$id.\ui\config('cache_file_suffix');
   $fs=@fopen($fname,'wb',FALSE);
-  if($fs!==FALSE)
-  {
+  if($fs!==FALSE){
     flock($fs,LOCK_EX);
     fwrite($fs,pack('N',time()));
     fwrite($fs,$data);
@@ -197,8 +193,7 @@ function silent_stop()
   $data=ob_get_clean();
   $fname=\ui\config('cache_path').$id.\ui\config('cache_file_suffix');
   $fs=@fopen($fname,'wb',FALSE);
-  if($fs!==FALSE)
-  {
+  if($fs!==FALSE){
     flock($fs,LOCK_EX);//Lock the file for safety
     fwrite($fs,pack('N',time()));
     fwrite($fs,$data);
@@ -219,16 +214,14 @@ function data(&$var,$id=false,$timeout=false)
 {
   if($id===false)
     $id=make_id();
-  if(isset($_GET['nocache'])&&$_GET['nocache']==\ui\config('nocache_code'))
-  {
+  if(isset($_GET['nocache'])&&$_GET['nocache']==\ui\config('nocache_code')){
     return FALSE;
   }
   if($timeout===FALSE)
     $timeout=\ui\config('cache_timeout',3600);
   $fname=\ui\config('cache_path').$id.\ui\config('cache_file_suffix');
   $fs=@fopen($fname,'rb',FALSE);
-  if($fs!==FALSE)
-  {
+  if ($fs !== FALSE){
     flock($fs,LOCK_SH|LOCK_NB);
     $time=fread($fs,4);
     if(!isset($time[3])){

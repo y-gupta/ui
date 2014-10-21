@@ -13,9 +13,8 @@
 /** FRAMEWORKED is defined as true for possible use in application to avoid direct access. */
 define('FRAMEWORKED',true);
 /** FROM_CLI is true when the PHP script is called from commandline */
-define('FROM_CLI',!isset($_SERVER['REMOTE_ADDR']));
-if(FROM_CLI)/** NO_TEMPLATE is needed on CLI */
-    define('NO_TEMPLATE',true);
+define('FROM_CLI',php_sapi_name() === 'cli' OR defined('STDIN'));
+
 include(dirname(__FILE__).'/core/ui.php');
 /**
  * When accessing from CLI, PATH_INFO is not supported. So, take path insformation as the 1st argument to this script
@@ -29,28 +28,33 @@ if(FROM_CLI){
         $_SERVER['QUERY_STRING']=$query_string;
         unset($query_string);
         parse_str($_SERVER['QUERY_STRING'],$_GET);
+        //TODO: merge _GET into _REQUEST
         $params=trim($argv[1],"/\\");
     }else $params='';
+}else if(UI_URL_REWRITE){
+  if(substr($_SERVER['REQUEST_URI'],0,strlen($_SERVER['SCRIPT_NAME']))==$_SERVER['SCRIPT_NAME']){
+    if(file_exists($_APP_DIR.'/app/403.php'))
+      include($_APP_DIR.'/app/403.php');
+    else
+      echo "Error #403 - Forbidden";
+    exit();
+  }
+  if(!isset($_GET['_rewrite_url']))
+    $_GET['_rewrite_url']='/';
+  $params=trim($_GET['_rewrite_url'],"/\\");
+  unset($_GET['_rewrite_url']);
 }else{
   if(isset($_SERVER['PATH_INFO']))
     $params=trim($_SERVER['PATH_INFO'],"/\\");
-  elseif(isset($_SERVER['ORIG_PATH_INFO'])){
+  elseif(isset($_SERVER['ORIG_PATH_INFO']))
     $params=trim($_SERVER['ORIG_PATH_INFO'],"/\\");
+  else $params='';
+
+  //TODO: check if file exists in public/
+  if($params&&file_exists('public/'.$params)){
+    header('Location: '.rtrim(dirname($_SERVER['SCRIPT_NAME']),'/').'/public/'.$params);
+    exit;
   }
-  elseif(defined('APP_BASE_URL')){
-/**
- * APP_BASE_URL must be defined in somewhere (preferably constants.php)
- * in case you expeience problems with a url_rewite to index.php/[path]
- * IT must start with a '/', be relative to your domain name. Case insensitive (only strlen is used). Eg.
- * If your application's indx.php is http://a.b/c/d/index.php
- * then APP_BASE_URL is /c/d
- */
-    $params=substr($_SERVER['REQUEST_URI'],strlen(APP_BASE_URL)).'?';
-    $params=substr($params,0,strpos($params,'?'));
-    $params=trim($params,"/\\");
-    unset($_GET['UI_PATH_INFO']);
-  }else
-    $params='';
 }
 \ui\global_var('path',$params,true);
 if($params=='')

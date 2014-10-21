@@ -1,9 +1,5 @@
 <?php
 namespace ui;
-
-register_shutdown_function('\\ui\\on_exit');
-ob_start();
-session_start();
 include($_APP_DIR.'inc/constants.php');
 
 date_default_timezone_set(TIMEZONE);
@@ -128,7 +124,7 @@ function on_exit()
 function get_url($name='path')//returns absolute URL to a controller
 {
 	if($name=='path')$name=global_var('path');
-	return config('base_url').(config('pretty_url')?'':'index.php/').$name;
+	return config('base_url').$name;
 }
 function &global_var($key=false,$val=NULL,$set=false)
 {
@@ -179,17 +175,3 @@ function get_flash($key=false,$default=NULL)
 		return $_SESSION['flash'];
 	return $default;
 }
-
-
-
-if(!isset($_APP_DIR)){
-  $_APP_DIR=dirname(__FILE__).'/';
-  global_var('imported_app',false,1);
-}else
-  global_var('imported_app',true,1);
-global_var('app_dir',$_APP_DIR,true);
-define('IID',substr(md5($_APP_DIR),0,8));//Instance ID, to prevent session variable collisions
-benchmark('Loaded Base UI');
-if(DEBUG)
-	error_reporting(E_ALL);
-benchmark();

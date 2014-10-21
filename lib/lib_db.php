@@ -182,8 +182,12 @@ function delete($table,$suffix)
     $q='DELETE FROM `'.\ui\config('sql_prefix').$table.'` '.$suffix;
     return \ui\db\query($q);
 }
-function select($table,$fields=array('*'),$suffix='')
+function select($table,$fields='*',$suffix='')
 {
-    $q='SELECT '.implode(',',$fields).' FROM `'.\ui\config('sql_prefix').$table.'` '.$suffix;
+    $q='SELECT '.(is_array($fields)?implode(',',$fields):$fields).' FROM `'.\ui\config('sql_prefix').$table.'` '.$suffix;
     return \ui\db\query($q);
+}
+
+function prefix($table){
+  return '`'.\ui\config('sql_prefix').$table.'`';
 }

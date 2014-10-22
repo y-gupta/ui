@@ -1,6 +1,17 @@
 {
     "name": "1upon0/ui",
-    "description": "a fast, minimal PHP framework to make web applications",
+    "description": "bare-bones PHP framework with URL routing, templating and helper libraries",
+    "homepage":"https://github.com/1upon0/ui",
+    "licence":"Apache 2.0",
+    "authors":[
+      {
+        "name": "Yash Gupta",
+        "homepage": "http://thetechnofreak.com",
+      },{
+        "name": "Contributors",
+        "homepage": "https://github.com/1upon0/ui/graphs/contributors"
+      }
+    ],
     "require": {
         "php": ">=5.3.0"
     }

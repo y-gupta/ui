@@ -70,7 +70,7 @@ function log($msg,$silent=false)
 }
 function benchmark($tag='',$send=false)
 {
-	if(PRODUCTION||defined('NO_TEMPLATE'))
+	if(PRODUCTION||defined('NO_TEMPLATE')||defined('NO_BENCHMARK'))
 		return;
 	static $start_time=0,$start_mem=0,$last_mem=0,$last_time=0,$now_time=0,$now_mem=0,$output='';
 	if($send)

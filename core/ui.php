@@ -62,11 +62,10 @@ function config($key=false,$val=NULL,$set=false)
  */
 function log($msg,$silent=false)
 {
-  global $_APP_DIR;
-    if(DEBUG&&!$silent){
-        echo '<pre>LOG (',date('M d,y h:i:sAP'),"):\n".htmlspecialchars($msg,ENT_QUOTES).'</pre>';
-    }
-    file_put_contents($_APP_DIR.LOG_FILE,date('M d,y h:i:sAP').":\n$msg\n----\n",FILE_APPEND);
+  if(DEBUG&&!$silent){
+      echo '<pre>',date('d/m/y h:i:saP')," ".htmlspecialchars($msg,ENT_QUOTES).'</pre>';
+  }
+  file_put_contents(global_var('app_dir').LOG_FILE,date('d/m/y h:i:saP')." $msg\n",FILE_APPEND);
 }
 function benchmark($tag='',$send=false)
 {

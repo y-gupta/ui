@@ -18,19 +18,46 @@ function load_lib($name)
         {
           if(!load_php(global_var('app_dir').'lib/'.$name.'/lib_'.$name.'.php'))
           {
-            log('[ui] ERROR loading lib: '.$name.PHP_EOL);
+            log("error: loading lib $name: not found\n");
       			return false;
       		}
       	}
       }else{
-        log('[ui] ERROR loading lib: '.$name.PHP_EOL);
+        log("error: loading lib $name: not found\n");
         return false;
       }
 		}
 	}
 	define($slug,true);
+  $auto_load='\\'.__NAMESPACE__."\\$name\\auto";
+  try{
+    if(DEBUG){
+      if(function_exists("$auto_load::testSuite()"))
+        $auto_load::testSuite();
+    }
+    if(function_exists("$auto_load::init()"))
+       $auto_load::init();
+  }catch(\Exception $e){
+    log("Loading lib $auto_load: ".$e->getMessage());
+    exit();
+  }
 	return true;
 }
+/**
+* include this in the lib: class auto{const load=0;public static function testSuite(){optional tests for debug mode}public static function init(){init code}}
+* call this to load a lib: \ui\lib_name\auto::load;
+*/
+spl_autoload_register(function($class){
+  $l=strlen(__NAMESPACE__)+1;
+  if(substr($class,0,$l)!=__NAMESPACE__)//namespace must start with ui\
+    return;
+  $lib=substr($class,$l,strrpos($class, '\\')-$l);
+  if(!$lib)
+    return;
+  echo "loading $lib";
+  load_lib($lib);
+});
+
 function load_php($file)
 {
 	if(file_exists($file))

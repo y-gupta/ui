@@ -1,6 +1,10 @@
 <?php
 namespace ui\func;
-
+class auto{
+  const load=0;
+  public static function testSuite(){
+  }
+}
 class Enum {
     protected $self = array();
     public function __construct( /*...*/ ) {
@@ -240,3 +244,5 @@ function get($url,$params=array(),$timeout=0,$headers=array())
     \ui\cache\data_stop($res,$id);
 	return $res;
 }
+
+require('func/password_compat.php');

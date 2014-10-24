@@ -129,4 +129,8 @@ if($i===0&&!file_exists($ui_filepath)){
  * Clean up all variables no longer required for minimum footprint
  */
 unset($ui_controller);unset($is_dir);unset($_APP_DIR);unset($params);unset($i);unset($n_params);unset($proposed);
+try{
 include($ui_filepath);
+}catch(Exception $e){
+  \ui\log("Exception: ".$e->getMessage());
+}
